@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<input type="file" id="file" name="file">
+<button id="get">上传</button>
+
+<script>
+var file = document.getElementById('file'),
+    get = document.getElementById('get'),
+    sudata = document.getElementById('sudata');
+var httpRequest = new XMLHttpRequest();
+var imgdata, fiie_type, file_name;
+
+
+file.onchange = function () {
+    var fileObj = file.files[0];
+    var reader = new FileReader();
+
+    reader.readAsDataURL(fileObj);
+    reader.onload = function () {
+        imgdata = this.result;
+        fiie_type = fileObj.type;
+        file_name = fileObj.name;
+    }
+};
+
+
+get.onclick = function () {
+    var url = "http://127.0.0.1:3000/index/image";
+    console.log(imgdata.length)
+    httpRequest.open("POST", url, true);
+    httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    httpRequest.send('data='+imgdata)
+    httpRequest.onreadystatechange = () => {
+        if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+            var data = JSON.parse(httpRequest.responseText);
+            console.log(data);
+        }
+    }
+}
+
+</script>
+</body>
+</html>
